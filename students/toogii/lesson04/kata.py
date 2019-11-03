@@ -3,7 +3,7 @@ from copy import copy
 import random
 
 
-clean_up_dict = {".": "", ",": " ,", "\"": "", "\'": "", "(": "", ")": "", "-": " "}
+clean_up_dict = {".": "", ",": "", "\"": "", "\'": "", "(": "", ")": "", "-": " "}
 
 spaceless_clean_line = list()
 
@@ -38,10 +38,7 @@ def clean_and_create_trigram(file: str, clean_up_dict: dict) -> dict:
                 if word == '':
                     clean_line.remove(word)
             for index in range(len(clean_line)-2):
-                if tuple(clean_line[index:index+2]) not in trigram_dict:
-                    trigram_dict.update({tuple(clean_line[index:index+2]): [clean_line[index+2]]})
-                else:
-                    trigram_dict[tuple(clean_line[index:index+2])].append(clean_line[index+2])
+                trigram_dict[tuple(clean_line[index:index+2])] = trigram_dict.get(tuple(clean_line[index:index+2]), []) + [clean_line[index+2]]
     return trigram_dict
     
 
