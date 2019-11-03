@@ -10,7 +10,7 @@ donations = {'TOOGII DASHDAVAA': {"donation": 3, "donation_amnt": 30000},'MARK Z
 
 def email_compose(donor : str, donation_amount: int):
     # Generate and print an appreciation email to new Donor.
-    email_letter = "Date: {}\n\nDear {},\n\nThank you for your generous gift of $ {donation_amnt} to our organization. We are thrilled to have your support.\nThrough your donation we have been able to accomplish our charity work around the world.\n  \nThank you\n\n" .format(str(datetime.today()).split(".")[0], donor,**donations[donor])
+    email_letter = "Date: {}\n\nDear {},\n\nThank you for your generous gift of $ {} to our organization. We are thrilled to have your support.\nThrough your donation we have been able to accomplish our charity work around the world.\n  \nThank you\n\n" .format(str(datetime.today()).split(".")[0], donor,donation_amount)
     print("\n\nGenerating an appreciation email for {}!\n\n" .format(donor))
     sleep(1)
     print("="*30)
@@ -30,7 +30,7 @@ def send_letters_to_all_donors():
         if not os.path.exists(os.path.abspath('files')):
             os.mkdir('files')
         if filename in os.listdir('files'):
-            print("The file {} for {} already exists!. Skipping!" .format(filename, donor))
+            print("There are no new donations for {} and the email {} already exists!. Skipping!" .format(donor, filename))
             continue
         with open(os.path.abspath('files/' + filename), 'a') as email:
             email.write(email_compose(donor, donations[donor]["donation_amnt"]))
