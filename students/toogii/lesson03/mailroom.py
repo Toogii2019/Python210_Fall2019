@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from time import sleep
-
+import sys
 
 choices = ('Send a Thank You', 'Create Report')
 donations = {'TOOGII DASHDAVAA': {"donation": 3, "donation_amnt": 30000},'MARK ZACHERBERG': {"donation": 1, "donation_amnt": 1000}, 'JEFF BEZOS': {"donation": 3, "donation_amnt": 15000}, 'BILL GATES': {"donation": 1, "donation_amnt": 500}, 'LARRY PAGE': {"donation": 2, "donation_amnt": 10000}}
@@ -94,7 +94,9 @@ def create_report():
 
 
 def main(called=False):
+    global donations
     while True:
+        donations = dict(sorted(donations.items(), key=lambda x: x[1]["donation_amnt"], reverse=True))
         print('\n\n\n\t Welcome to Donations!\n\n')
         print('\t1.   {}\n\t2.   {}'.format(*choices))
         if called == True:
