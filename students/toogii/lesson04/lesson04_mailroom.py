@@ -118,8 +118,10 @@ choice_dict = {'1': send_a_thank_you, '2': create_report, '3': send_letters_to_a
 
 
 def main(called=False):
+    global donations
     #Getting a user input
     while True:
+        donations = dict(sorted(donations.items(), key=lambda x: x[1]["donation_amnt"], reverse=True))
         print('\n\n\n\t Welcome to Donations!\n\n')
         print('\t1.   {}\n\t2.   {}\n\t3.   {}\n\t4.   {}'.format(*choices))
         if called == True:
