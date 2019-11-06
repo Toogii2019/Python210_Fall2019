@@ -12,4 +12,8 @@ or False otherwise.
 
 
 def walnut_party(walnuts, is_weekend):
-    pass
+    if is_weekend and walnuts >= 40:
+        return True
+    if not is_weekend and (60 >= walnuts >=40):
+        return True
+    return False
