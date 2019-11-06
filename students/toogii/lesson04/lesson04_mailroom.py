@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from time import sleep
 from datetime import date, datetime
+import sys
 import os
 
 
@@ -132,7 +133,7 @@ def main(called=False):
                 sleep(1)
                 print('\n\nExiting the program!\n\nHave a good day!\n\n')
                 sleep(1)
-                break
+                sys.exit('Good Bye')
             choice_dict[str(choice)]()
         else:
             choice_dict.popitem()
