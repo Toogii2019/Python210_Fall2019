@@ -1,7 +1,44 @@
-from lesson06_mailroom import create_report,main,create_table,send_a_thank_you,get_a_new_donor_info,list_all_donors,update_donation,send_letters_to_all_donors,email_compose
+#!/usr/bin/env python3
+from datetime import datetime
+import lesson06_mailroom
+import unittest
 
-choices = ('Choice_1', 'Choice_2','Choice_3','Choice_4')
-donations = {'donor_1': {"donation": 3, "donation_amnt": 30000},'donor_2': {"donation": 4, "donation_amnt": 5000}}
 
-def test_create_report():
-    assert create_report(donations)is {'donor_1': [3, 30000, 10000.0],'donor_2': [4, 5000, 1666.6666666666667}}
+donations_dict_dict = {'donor_name_1': {"donation": 3, "donation_amnt": 30000},'donor_name_2': {"donation": 2, "donation_amnt": 5000}, 'donor_name_3': {"donation": 5, "donation_amnt": 155000}, 'donor_name_4': {"donation": 2, "donation_amnt": 500}, 'donor_name_5': {"donation": 2, "donation_amnt": 10000}}
+lst_names = [(1, 'donor_name_1'), (2,'donor_name_2'), (3, 'donor_name_3'),(4, 'donor_name_4'),(5, 'donor_name_5')]
+donations_dict_list = {'donor_name_1': [3, 30000, '10000.0'],'donor_name_2': [ 2, 5000, '2500.0'], 'donor_name_3': [ 5,  155000, '31000.0'], 'donor_name_4': [ 2, 500, '250.0'], 'donor_name_5': [ 2,  10000, '5000.0']}
+column = ['Donor Name', 'Num Gifts', 'Total Given ($)', 'Average Gift ($)']
+
+email_letter = "\n\nDear {},\n\nThank you for your generous gift of $ {} to our organization. We are thrilled to have your support.\nThrough your donation we have been able to accomplish our charity work around the world.\n  \nThank you\n\n"
+
+class TestCalc(unittest.TestCase):
+
+
+
+    def test_create_report(self):
+        result = lesson06_mailroom.create_report(donations_dict_dict)
+        self.assertEqual(result, donations_dict_list)
+
+
+    def test_create_table(self):
+        lst = list()
+        for donor in donations_dict_dict:
+            lst.append(len(donor))
+        self.assertEqual(lesson06_mailroom.create_table(column, donations_dict_list), sorted(lst)[-1] + 3)
+
+
+    def test_list_all_donors(self):
+        self.assertEqual(lesson06_mailroom.list_all_donors(donations=donations_dict_dict), lst_names)
+
+
+    def test_update_donation(self):
+#        self.assertEqual(lesson06_mailroom.update_donation('donor_name_2', 5501, donations_dict_dict), (3, 10501))
+        self.assertEqual(lesson06_mailroom.update_donation('donor_name_2', 5501, donations_dict_dict), (donations_dict_dict['donor_name_2']['donation'], donations_dict_dict['donor_name_2']['donation_amnt']))
+
+
+    def test_email_compose(self):
+        self.assertEqual(lesson06_mailroom.email_compose('donor_name_1', 30000), (email_letter.format('donor_name_1', 30000)))
+
+
+if __name__ == '__main__':
+    unittest.main()

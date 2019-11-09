@@ -11,7 +11,7 @@ donations = {'TOOGII DASHDAVAA': {"donation": 3, "donation_amnt": 30000},'MARK Z
 
 def email_compose(donor : str, donation_amount: int):
     # Generate and print an appreciation email to new Donor.
-    email_letter = "Date: {}\n\nDear {},\n\nThank you for your generous gift of $ {} to our organization. We are thrilled to have your support.\nThrough your donation we have been able to accomplish our charity work around the world.\n  \nThank you\n\n" .format(str(datetime.today()).split(".")[0], donor,donation_amount)
+    email_letter = "\n\nDear {},\n\nThank you for your generous gift of $ {} to our organization. We are thrilled to have your support.\nThrough your donation we have been able to accomplish our charity work around the world.\n  \nThank you\n\n" .format(donor,donation_amount)
     print("\n\nGenerating an appreciation email for {}!\n\n" .format(donor))
     sleep(1)
     print("="*30)
@@ -37,22 +37,25 @@ def send_letters_to_all_donors():
             email.write(email_compose(donor, donations[donor]["donation_amnt"]))
             print("="*30)
             print("The file {} for {} has been created!" .format(filename, donor))
+    return
 
-
-def update_donation(donor, donation_amnt):
+def update_donation(donor, donation_amnt=donations, donations=donations):
     # Update dictionary of donors with new donor information.
     if donor in donations:
         donations[donor]["donation"] = donations[donor]["donation"] + 1
         donations[donor]["donation_amnt"] = donations[donor]["donation_amnt"] + donation_amnt
     else:
         donations.update({donor: {"donation": 1,"donation_amnt": donation_amnt }})
+    print((donations[donor]['donation'], donations[donor]['donation_amnt']))
+    return (donations[donor]['donation'], donations[donor]['donation_amnt'])
 
-
-def list_all_donors():
+def list_all_donors(donations=donations):
     # Prints all Donors
+    lst = list()
     for index, donors in enumerate(donations):
         print(str(index + 1) + " -- " + donors)
-
+        lst.append((index+1,donors))
+    return lst
 
 def get_a_new_donor_info():
     # Get the Donor name and donation amount
@@ -76,6 +79,7 @@ def get_a_new_donor_info():
             except ValueError:
                 print("Please enter the amount in numbers only!")
                 continue
+    return
 
 def send_a_thank_you():
     # Gather Information about the new Donor
@@ -94,10 +98,11 @@ def send_a_thank_you():
         print("\nEmail message hasn't been created due to an issue!\n")
     else:
         print("\nWe have generated an email successfully\n")
+    return email_compose(donor, donation_amount)
+
 
 def create_table(column, data: dict):
     # Find the longest name to make large enough cell
-
     temp_list = [len(donor) for donor in data] # using the list comprehension
     longest_space = sorted(temp_list)[-1] + 3
     print("\n\n\n")
@@ -111,25 +116,18 @@ def create_table(column, data: dict):
         for item in data[donor]:
             print(str(item) + (longest_space - len(str(item)))*' ', end = '| ')
         print("\n")
+    return longest_space
 
 
-def create_report():
+def create_report(donation_dict_dict=donations):
     # Prepare the Data for creating the table
     column = ['Donor Name', 'Num Gifts', 'Total Given ($)', 'Average Gift ($)']
-    data = {donor: [v for k, v in donations[donor].items()] for donor in donations}
-    data = {donor: data[donor] + ([str(data[donor][-1]/data[donor][-2])]) for donor in donations}
-    print(data)
+    data = {donor: [v for k, v in donation_dict_dict[donor].items()] for donor in donation_dict_dict}
+    data = {donor: data[donor] + ([str(data[donor][-1]/data[donor][-2])]) for donor in donation_dict_dict}
     create_table(column,data)
-
+    return data
 
 choice_dict = {'1': send_a_thank_you, '2': create_report, '3': send_letters_to_all_donors, '4': 'QUIT'}
-
-
-def print_screen(**kwarg):
-    print('\n\n\n\t Welcome to Donations!\n\n')
-    print('\t1.   {}\n\t2.   {}\n\t3.   {}\n\t4.   {}'.format(*choices))
-    if called == True:
-        print('\n\n\n\tHit R to go resume where you left')
 
 
 def main(called=False):
@@ -138,7 +136,10 @@ def main(called=False):
     while True:
         #sorting the donators based on their donation amounts
         donations = dict(sorted(donations.items(), key=lambda x: x[1]["donation_amnt"], reverse=True))
-        print_screen(called=called)
+        print('\n\n\n\t Welcome to Donations!\n\n')
+        print('\t1.   {}\n\t2.   {}\n\t3.   {}\n\t4.   {}'.format(*choices))
+        if called == True:
+            print('\n\n\n\tHit R to go resume where you left')
         choice = input("\n\nPlease Enter Your choice:   ".format(choices))
         sleep(1)
         if str(choice).upper() == 'R':
