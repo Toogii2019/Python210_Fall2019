@@ -21,7 +21,7 @@ def email_compose(donor : str, donation_amount: int):
     return email_letter
 
 
-def send_letters_to_all_donors():
+def send_letters_to_all_donors(donations=donations):
     '''
     This function creates a folder called "files" in the working directly and writes email files.
     If new donation received from the donor, the new file will be created. If not, the function will not create nor write to a existing file.
@@ -37,7 +37,7 @@ def send_letters_to_all_donors():
             email.write(email_compose(donor, donations[donor]["donation_amnt"]))
             print("="*30)
             print("The file {} for {} has been created!" .format(filename, donor))
-    return
+    return (filename, donor)
 
 def update_donation(donor, donation_amnt=donations, donations=donations):
     # Update dictionary of donors with new donor information.
@@ -79,9 +79,8 @@ def get_a_new_donor_info():
             except ValueError:
                 print("Please enter the amount in numbers only!")
                 continue
-    return
 
-def send_a_thank_you():
+def send_a_thank_you(**kwarg):
     # Gather Information about the new Donor
     donor,donation_amount = get_a_new_donor_info()
     sleep(1)

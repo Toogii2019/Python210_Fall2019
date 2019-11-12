@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-from datetime import datetime
 import lesson06_mailroom
 import unittest
+from unittest.mock import patch
+import containers
+from datetime import date
 
 
 donations_dict_dict = {'donor_name_1': {"donation": 3, "donation_amnt": 30000},'donor_name_2': {"donation": 2, "donation_amnt": 5000}, 'donor_name_3': {"donation": 5, "donation_amnt": 155000}, 'donor_name_4': {"donation": 2, "donation_amnt": 500}, 'donor_name_5': {"donation": 2, "donation_amnt": 10000}}
@@ -37,8 +39,14 @@ class TestCalc(unittest.TestCase):
 
 
     def test_email_compose(self):
-        self.assertEqual(lesson06_mailroom.email_compose('donor_name_1', 30000), (email_letter.format('donor_name_1', 30000)))
+        self.assertEqual(lesson06_mailroom.email_compose('donor_name_1', 30000), (email_letter.format('donor_name_1', 30000)))    
 
+
+    def test_send_letters_to_donors(self):
+        self.donor = 'donor name_1'
+        self.donations_dict = {'donor name_1': {"donation": 3, "donation_amnt": 30000}}
+        self.filename = "_".join(self.donor.split()) + '_' + "_".join(str(date.today()).split("-")) + '_' + "donation" + "_" + str(self.donations_dict[self.donor]["donation"])
+        self.assertEqual(lesson06_mailroom.send_letters_to_all_donors(donations=self.donations_dict), (self.filename, self.donor)) 
 
 if __name__ == '__main__':
     unittest.main()
