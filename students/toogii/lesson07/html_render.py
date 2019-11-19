@@ -19,7 +19,7 @@ def render_tags(tag: str, kwarg: dict, self_closing = False) -> tuple:
 
 
 class Element(object):
-    #tag = 'html'
+    tag = 'html'
     indent = ""
     self_closing = False
     def __init__(self, content=None, **kwarg):
