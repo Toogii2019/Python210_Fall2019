@@ -9,7 +9,7 @@ A class-based system for rendering html.
 
 def render_tags(tag: str, kwarg: dict, self_closing = False) -> tuple:
     space = ""
-    if kwarg: 
+    if kwarg:
         space = " "
     if self_closing:
         return "<" + tag + space + ",".join([k + '=' + v for k,v in kwarg.items()]) + "/>"
@@ -19,8 +19,8 @@ def render_tags(tag: str, kwarg: dict, self_closing = False) -> tuple:
 
 
 class Element(object):
-    tag = 'html'
-    indent = ''
+    #tag = 'html'
+    indent = ""
     self_closing = False
     def __init__(self, content=None, **kwarg):
         self.content = content
@@ -44,50 +44,64 @@ class Element(object):
             self.closing_tag = self.content_list[-1]
             self.content_list = self.content_list[:-1] + new_content.content_list
             self.content_list.append(self.closing_tag)
-    def render(self, out_file):
+    def render(self, out_file, cur_ind=""):
+        self.cut_ind = cur_ind + self.indent
         for content in self.content_list:
-            out_file.write("\n" + content + "\n")
+            out_file.write("\n" + self.cut_ind + content + "\n")
 
 class Html(Element):
-    def render(self,out_file, cur_ind=0):
-        out_file.write("<!DOCTYPE html>")
-        Element.render(self, out_file)
+    tag = "html"
+    indent = ""
+    def render(self,out_file,cur_ind=""):
+        self.cur_ind = cur_ind + self.indent
+        out_file.write(self.cur_ind + "<!DOCTYPE html>")
+        Element.render(self, out_file, cur_ind="")
 
 class Body(Element):
     tag = 'body'
+    indent = "    "
     pass
 
 class P(Element):
+    indent = "        "
     tag = 'p'
     pass
 
 class Head(Element):
+    indent = "    "
     tag = 'head'
     pass
 
 class OneLineTag(Element):
-    def render(self, out_file, cur_ind=0):
+    indent = ""
+    def render(self, out_file, cur_ind=''):
+        self.cur_ind = cur_ind + self.indent
         for content in self.content_list:
-            out_file.write(" " + content + " ")
+            out_file.write(" " + self.cur_ind + content + " ")
 
 class Title(OneLineTag):
+    indent = "        "
     tag = 'title'
     pass
 
 class Hr(Element):
     tag = 'hr'
     self_closing = True
-    def render(self, out_file):
+    indent = "        "
+    def render(self, out_file, cur_ind=''):
+        self.cur_ind = cur_ind + self.indent
         self.tag = render_tags(tag, self.kwarg_dict, self.self_closing)
-        out_file.write(self.tag) 
+        out_file.write(self.cur_ind + self.tag)
 
 class Br(Element):
     tag = 'br'
+    indent = "        "
     self_closing = True
-    def render(self, out_file):
+    def render(self, out_file, cur_ind=''):
+        self.cur_ind = cur_ind + self.indent
         self.tag = render_tags(tag, self.kwarg_dict, self.self_closing)
-        out_file.write(self.tag) 
-    
+        out_file.write(self.cur_ind + self.tag)
+
 
 class A(Element):
     tag = 'a'
@@ -99,15 +113,18 @@ class A(Element):
 
 
 class Ul(Element):
+    indent = "            "
     tag = 'ul'
     pass
 
 
 class Li(Element):
+    indent = "            "
     tag = 'li'
     pass
 
 class H(OneLineTag):
+    indent = "    "
     tag = 'h'
     def __init__(self, level, header):
         self.level = level
@@ -116,9 +133,6 @@ class H(OneLineTag):
 
 
 class Meta(OneLineTag):
+    indent = "        "
     tag = 'meta'
     self_closing = True
-
-
-
-
