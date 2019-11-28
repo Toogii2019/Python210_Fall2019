@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from donor_class import Donor
 from time import sleep
-from mailroom import create_table
+from table_creator import create_table
 import sys
 
 
