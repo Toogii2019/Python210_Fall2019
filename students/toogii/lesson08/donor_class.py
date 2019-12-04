@@ -31,7 +31,7 @@ class Donor:
     def email_to_all_donors(self):
         for donor in Donor.donation_dict:
             print("\n\n")
-            print(Donor.email_template.format(str(datetime.today()).split(".")[0],donor, Donor.donation_dict[donor]))
+            print(Donor.email_template.format(str(datetime.today()).split(".")[0],donor, Donor.donation_dict[donor]['donation_amount']))
 
     def total_donation(self):
     	return sum(Donor.donation_dict[self.name])
